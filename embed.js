@@ -7,6 +7,8 @@ const url = new URL(window.location.href);
 const loading = document.getElementById('loading');
 
 const ical = url.searchParams.get('ical');
+const ical2 = url.searchParams.get('ical2');
+const ical3 = url.searchParams.get('ical3');
 let show_title = url.searchParams.get('title') || 1;
 const show_nav = url.searchParams.get('nav') || 1;
 const show_date = url.searchParams.get('date') || 1;
@@ -15,6 +17,9 @@ const show_view = url.searchParams.get('view') || 1;
 const default_view = url.searchParams.get('dview') || 0;
 const monday_start = url.searchParams.get('monstart') || 0;
 const color = url.searchParams.get('color') || '#1A73E8';
+const color1 = url.searchParams.get('color1') || '#1A73E8';
+const color2 = url.searchParams.get('color2') || '#1A73E8';
+const color3 = url.searchParams.get('color3') || '#1A73E8';
 const colorBG = url.searchParams.get('colorbg') || '#FFFFFF';
 const colorText = url.searchParams.get('colortxt') || '#000000';
 const colorThemeText = url.searchParams.get('colorsecondarytxt') || '#FFFFFF';
@@ -26,6 +31,41 @@ let selectedView = default_view;
 
 function getHumanDate(date) {
 	return `${date.getFullYear()}-${(date.getMonth()+1).toString().padStart(2,0)}-${date.getDate().toString().padStart(2,0)}`;
+}
+
+function filterEvDay(e, day) {
+	dayStart = new Date(day);
+	dayStart.setHours(0);
+	dayStart.setMinutes(0);
+	dayStart.setSeconds(0);
+	dayEnd = new Date(day);
+	dayEnd.setHours(23);
+	dayEnd.setMinutes(59);
+	dayEnd.setSeconds(59);
+	return e.startDate < dayEnd &&
+		   e.endDate > dayStart
+}
+function isNextMonth(day, selDay) {
+	console.log('isNext');
+	nm = new Date(selDay);
+	console.log('selDay', selDay);
+	nm.setMonth(nm.getMonth() + 1);
+	nm.setDate(1);
+	nm.setHours(0);
+	nm.setMinutes(0);
+	nm.setSeconds(0);
+	console.log('nm', nm);
+	console.log(day)
+	console.log(day > nm)
+	return day >= nm;
+}
+function isPrevMonth(day, selDay) {
+	nm = new Date(selDay)
+	nm.setDate(1);
+	nm.setHours(0);
+	nm.setMinutes(0);
+	nm.setSeconds(0);
+	return day < nm;
 }
 
 function createDateCell(date, todayd = false) {
@@ -60,15 +100,16 @@ function createDateCell(date, todayd = false) {
 
 function selectDay(date, focus = true, events = null) {
 	let newSelection = new Date(date + 'T00:00');
+	console.log(newSelection)
 	let newMonth = false;
 	if (selectedDay.getMonth() != newSelection.getMonth() && events != null) {
 		renderMonth(events, newSelection);
 		newMonth = true;
 	}
-
 	selectedDay = newSelection;
 
-	document.querySelector('#date_label span').innerHTML = `${DAYS_OF_WEEK[selectedDay.getDay()]}, ${MONTHS[selectedDay.getMonth()]} ${selectedDay.getDate()}`;
+
+	document.querySelector('#date_label span').innerHTML = `${MONTHS[selectedDay.getMonth()]}`;
 	document.getElementById('date').value = getHumanDate(selectedDay);
 
 	let selectedElement = document.querySelector(`td[data-date='${getHumanDate(selectedDay)}']`);
@@ -329,9 +370,17 @@ function renderMonth(events, fromDay = new Date(today.valueOf())) {
 				selectDay(dayCell.dataset.date, false, events);
 			};
 			dayCell.tabIndex = '-1';
-			if (day < today) {
-				dayCell.className = 'past';
+			// if (day < today) {
+			// 	dayCell.className = 'past';
+			// }
+			if (isNextMonth(day, fromDay)) {
+				dayCell.className = 'nextmonth';
 			}
+			if (isPrevMonth(day, fromDay)) {
+				dayCell.className = 'prevmonth';
+			}
+			dayCell.classList.add('day-'+day.getDay());
+
 			let dateEl = document.createElement('span');
 			dateEl.classList.add('date');
 			if (day.getMonth() == fromDay.getMonth()) {
@@ -345,11 +394,11 @@ function renderMonth(events, fromDay = new Date(today.valueOf())) {
 			dateEl.appendChild(dateText);
 			dayCell.appendChild(dateEl);
 
-			let dayEvents = events.filter((e) => getHumanDate(e.startDate) == getHumanDate(day));
-
+			let dayEvents = events.filter((e) => filterEvDay(e, day));
 			for (let e = 0; e < dayEvents.length; e++) {
 				let event = document.createElement('div');
-				event.className = 'event';
+				event.className = 'event ' + dayEvents[e].class;
+				// event.className = 'event';
 				event.tabIndex = '0';
 				event.appendChild(document.createTextNode(dayEvents[e].name));
 				event.onkeypress = (e) => {
@@ -358,6 +407,14 @@ function renderMonth(events, fromDay = new Date(today.valueOf())) {
 					}
 				};
 				event.onclick = () => {showMonthDetails(dayEvents[e])};
+				dayCell.appendChild(event);
+			}
+			for (let e = dayEvents.length; e <3; e++) {
+				let event = document.createElement('div');
+				event.className = 'event empty';
+				// event.className = 'event';
+				event.tabIndex = '0';
+				event.appendChild(document.createTextNode('---'));
 				dayCell.appendChild(event);
 			}
 			weekRow.appendChild(dayCell);
@@ -398,18 +455,22 @@ function renderCalendar(meta, events) {
 	// Nav
 	let btn_today = document.getElementById('btn_today');
 	let arrows = document.getElementById('arrows');
+	/*
 	btn_today.onclick = () => {
 		// Scroll to today
 		selectDay(getHumanDate(today), true, events);
 	};
+	*/
 	document.getElementById('btn_prev').onclick = () => {
 		let prevDay = new Date(selectedDay.valueOf());
-		prevDay.setDate(prevDay.getDate() - 1);
+		prevDay.setMonth(prevDay.getMonth() - 1);
 		selectDay(getHumanDate(prevDay), true, events);
 	};
 	document.getElementById('btn_next').onclick = () => {
 		let prevDay = new Date(selectedDay.valueOf());
-		prevDay.setDate(prevDay.getDate() + 1);
+		console.log('before', prevDay)
+		prevDay.setMonth(prevDay.getMonth() + 1);
+		console.log('after', prevDay)
 		selectDay(getHumanDate(prevDay), true, events);
 	};
 	if (show_nav == 0) {
@@ -429,15 +490,15 @@ function renderCalendar(meta, events) {
 
 	// Date
 	let date_label = document.getElementById('date_label');
-	let date_input = document.getElementById('date');
-	document.querySelector('#date_label span').innerHTML = `${DAYS_OF_WEEK[selectedDay.getDay()]}, ${MONTHS[selectedDay.getMonth()]} ${selectedDay.getDate()}`;
-	date_input.value = getHumanDate(selectedDay);
-	date_input.onchange = () => {
-		selectDay(date_input.value, true, events);
-	};
-	if (show_date == 0) {
-		date_label.style.display = 'none';
-	}
+	// let date_input = document.getElementById('date');
+	document.querySelector('#date_label span').innerHTML = `${MONTHS[selectedDay.getMonth()]}`;
+	// date_input.value = getHumanDate(selectedDay);
+	// date_input.onchange = () => {
+	//	selectDay(date_input.value, true, events);
+	// };
+	// if (show_date == 0) {
+	// 	date_label.style.display = 'none';
+	// }
 
 	// Remove nav element
 	if (show_title == 0 && show_nav == 0 && show_date == 0 && show_view == 0) {
@@ -446,6 +507,9 @@ function renderCalendar(meta, events) {
 
 	// Colors
 	document.documentElement.style.setProperty('--theme-color', color);
+	document.documentElement.style.setProperty('--theme-1-color', color1);
+	document.documentElement.style.setProperty('--theme-2-color', color2);
+	document.documentElement.style.setProperty('--theme-3-color', color3);
 	document.documentElement.style.setProperty('--text-color', colorText);
 	document.documentElement.style.setProperty('--background-color', colorBG);
 	document.documentElement.style.setProperty('--theme-text-color', colorThemeText);
@@ -455,57 +519,72 @@ function renderCalendar(meta, events) {
 	loading.style.display = 'none';
 }
 
-function parseCalendar(data) {
-	let jCal = ICAL.parse(data);
-	let comp = new ICAL.Component(jCal);
-
-	const meta = {
-		calname: comp.getFirstPropertyValue('x-wr-calname'),
-		timezone: new ICAL.Timezone(comp.getFirstSubcomponent('vtimezone')).tzid,
-		caldesc: comp.getFirstPropertyValue('x-wr-caldesc')
-	};
-
-	let eventData = comp.getAllSubcomponents('vevent');
+function parseCalendar(data1, data2, data3) {
+	let jCals = [];
+	if (data1) {
+		jCals.push(ICAL.parse(data1));
+	}
+	if (data2) {
+		jCals.push(ICAL.parse(data2));
+	}
+	if (data3) {
+		jCals.push(ICAL.parse(data3));
+	}
 	let events = [];
+	let meta = null;
+	for (let index = 0; index < jCals.length; index++) {
+		let jCal = jCals[index];
+		let jCalClass = 'cal' + (index+1)
+		let comp = new ICAL.Component(jCal);
+		meta = {
+			calname: comp.getFirstPropertyValue('x-wr-calname'),
+			timezone: new ICAL.Timezone(comp.getFirstSubcomponent('vtimezone')).tzid,
+			caldesc: comp.getFirstPropertyValue('x-wr-caldesc')
+		};
+		let eventData = comp.getAllSubcomponents('vevent');
 
-	// Copy event data to custom array
-	for (let i = 0; i < eventData.length; i++) {
-		let event = new ICAL.Event(eventData[i]);
-		let duration = event.endDate.subtractDate(event.startDate);
-		events.push({
-			uid: event.uid,
-			name: event.summary,
-			location: event.location,
-			description: event.description,
-			startDate: event.startDate.toJSDate(),
-			endDate: event.endDate.toJSDate(),
-			allDay: event.startDate.isDate,
-			days: (duration.toSeconds()/86400)
-		});
-		if (event.isRecurring()) {
-			let expand = new ICAL.RecurExpansion({
-				component: eventData[i],
-				dtstart: event.startDate
-			});
+		// Copy event data to custom array
+		for (let i = 0; i < eventData.length; i++) {
+			let event = new ICAL.Event(eventData[i]);
+			let duration = event.endDate.subtractDate(event.startDate);
+			let ev = {
+				uid: event.uid,
+				name: event.summary,
+				location: event.location,
+				description: event.description,
+				startDate: event.startDate.toJSDate(),
+				endDate: event.endDate.toJSDate(),
+				allDay: event.startDate.isDate,
+				days: (duration.toSeconds()/86400),
+				class: jCalClass
+			}
+			events.push(ev);
+			if (event.isRecurring()) {
+				let expand = new ICAL.RecurExpansion({
+					component: eventData[i],
+					dtstart: event.startDate
+				});
 
-			let j = 0;
-			let next;
-			while (j < 10 && (next = expand.next())) {
-				if (j > 0) {
-					let endDate = next.clone();
-					endDate.addDuration(duration);
-					events.push({
-						uid: event.uid,
-						name: event.summary,
-						location: event.location,
-						description: event.description,
-						startDate: next.toJSDate(),
-						endDate: endDate.toJSDate(),
-						allDay: event.startDate.isDate,
-						days: (duration.toSeconds()/86400)
-					});
+				let j = 0;
+				let next;
+				while (j < 10 && (next = expand.next())) {
+					if (j > 0) {
+						let endDate = next.clone();
+						endDate.addDuration(duration);
+						events.push({
+							uid: event.uid,
+							name: event.summary,
+							location: event.location,
+							description: event.description,
+							startDate: next.toJSDate(),
+							endDate: endDate.toJSDate(),
+							allDay: event.startDate.isDate,
+							days: (duration.toSeconds()/86400),
+							class: jCalClass,
+						});
+					}
+					j++;
 				}
-				j++;
 			}
 		}
 	}
@@ -515,7 +594,31 @@ function parseCalendar(data) {
 if (ical) {
 	fetch(ical).then((response) => {
 		response.text().then((text) => {
-			parseCalendar(text);
+
+			if (ical2) {
+				fetch(ical2).then((response2) => {
+					response2.text().then((text2) => {
+
+						if (ical3) {
+							fetch(ical3).then((response3) => {
+								response3.text().then((text3) => {
+									parseCalendar(text, text2, text3);
+								});
+							}).catch((e) => {
+								console.error(e);
+								loading.innerHTML = "Error: iCal3 URL doesn't exist or isn't valid<br><br>iCal links (like those from Google calendar) will need to use a cors proxy";
+							});
+						} else {
+							parseCalendar(text, text2, []);
+						}
+					});
+				}).catch((e) => {
+					console.error(e);
+					loading.innerHTML = "Error: iCal 2URL doesn't exist or isn't valid<br><br>iCal links (like those from Google calendar) will need to use a cors proxy";
+				});
+			} else {
+				parseCalendar(text, [], []);
+			}
 		});
 	}).catch((e) => {
 		console.error(e);
