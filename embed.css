@@ -11,7 +11,7 @@ body {
 	margin: 0;
 	background-color: var(--background-color);
 	color: var(--text-color);
-	font-family: sans-serif;
+	font-family: 'Calibri';
 	min-height: 100vh;
 }
 #loading {
@@ -256,6 +256,7 @@ nav #date {
 	border: 1px solid var(--border-color);
 	vertical-align: top;
 	overflow: hidden;
+	min-height: 90px
 }
 #month .labels td {
 	border: 0;
@@ -298,6 +299,23 @@ nav #date {
 	padding: 2px 4px;
 	border-radius: 3px;
 }
+#month td.prevmonth {
+	background-color: #f9f0f0;
+}
+#month td.nextmonth {
+	background-color: #f0f0f9;
+}
+
+#month td.day-6, #month td.day-0 {
+	background: repeating-linear-gradient(-45deg, #e8e9ff, #e8e9ff 5px, #ffffff 5px, #ffffff 10px);
+}
+#month td.nextmonth.day-6, #month td.nextmonth.day-0 {
+	background: repeating-linear-gradient(-45deg, #e8e9ff, #e8e9ff 5px, #f0f0f9 5px, #f0f0f9 10px);
+}
+#month td.prevmonth.day-6, #month td.prevmonth.day-0 {
+	background: repeating-linear-gradient(-45deg, #e8e9ff, #e8e9ff 5px, #f9f0f0 5px, #f9f0f0 10px);
+}
+
 #month .past .event {
 	opacity: .6;
 }
@@ -357,4 +375,25 @@ nav #date {
 	display: block;
 	font-size: 1.6em;
 	margin-bottom: 14px;
+}
+
+
+#month .event.cal1,
+#agenda .event.cal1 {
+	background-color: var(--theme-1-color);
+}
+#month .event.cal2,
+#agenda .event.cal2 {
+	background-color: var(--theme-2-color);
+}
+#month .event.cal3,
+#agenda .event.cal3 {
+	background-color: var(--theme-3-color);
+}
+#month .event.empty,
+#agenda .event.empty {
+	background: none;
+	border: rgba(0,0,0,.0);
+	cursor: initial;
+	color: rgba(0,0,0,0);
 }
