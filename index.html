@@ -25,11 +25,14 @@
 		<main>
 			<div id="settings">
 				<h2>Settings</h2>
+				<label for="ical">iCal URL 1</label><button type="button" id="add_cors">Add cors proxy to url</button><br>
+				<input type="url" id="ical" placeholder="https://example.com/calendar.ical" value="https://calendar.google.com/calendar/ical/923lj7o4i41b2mc1qtuf6jjii0%40group.calendar.google.com/private-90801db7f8b82673ba341f0ef405cc88/basic.ics"><br><br>
+				<label for="ical2">iCal URL 2</label><br>
+				<input type="url" id="ical2" placeholder="https://example.com/calendar.ical" value="https://calendar.google.com/calendar/ical/m.caruso425%40gmail.com/private-2d3ab5065c3bec6017b87b1047e657b7/basic.ics"><br><br>
+				<label for="ical3">iCal URL 3</label><br>
+				<input type="url" id="ical3" placeholder="https://example.com/calendar.ical" value="https://calendar.google.com/calendar/ical/6ioojbdmbnm39aqap94jh071h4%40group.calendar.google.com/private-ebada39b19d2203ff3d1d7b4deb679f3/basic.ics"><br><br>
 
-				<label for="ical">iCal URL</label> <button type="button" id="add_cors">Add cors proxy to url</button><br>
-				<input type="url" id="ical" placeholder="https://example.com/calendar.ical" value="https://gra0007.github.io/modern-cal-embed/example.ics"><br><br>
-
-				<input type="checkbox" checked id="show_title">
+				<input type="checkbox" id="show_title">
 				<label for="show_title">Title</label><br>
 
 				<input type="checkbox" checked id="show_nav">
@@ -38,27 +41,38 @@
 				<input type="checkbox" checked id="show_date">
 				<label for="show_date">Date</label><br>
 
-				<input type="checkbox" checked id="show_view">
+				<input type="checkbox" id="show_view">
 				<label for="show_view">View selector</label><br>
 
 				<input type="checkbox" id="show_details">
 				<label for="show_details">Always show details</label><br>
 
-				<input type="checkbox" id="monday_start">
+				<input type="checkbox" checked id="monday_start">
 				<label for="monday_start">Start week on Monday</label><br><br>
 
 				<label for="default_view">Default view</label><br>
 				<select id="default_view">
-					<option value="0" selected>Agenda</option>
-					<option value="1">Month</option>
+					<option value="0">Agenda</option>
+					<option value="1" selected>Month</option>
 				</select><br><br>
 
 				<label for="colorbg">Background color</label><br>
 				<input id="colorbg" type="color" value="#FFFFFF"><br>
 				<label for="colortxt">Text color</label><br>
 				<input id="colortxt" type="color" value="#000000"><br>
+
 				<label for="color">Theme color</label><br>
-				<input id="color" type="color" value="#1A73E8"><br>
+				<input id="color" type="color" value="#ee3333"><br>
+
+				<label for="color">Calendar 1</label><br>
+				<input id="color1" type="color" value="#ee3333"><br>
+
+				<label for="color">Calendar 2</label><br>
+				<input id="color2" type="color" value="#33ee33"><br>
+
+				<label for="color">Calendar 3</label><br>
+				<input id="color3" type="color" value="#3333ee"><br>
+
 				<label for="colorsecondarytxt">Theme text color</label><br>
 				<input id="colorsecondarytxt" type="color" value="#FFFFFF"><br>
 			</div>
