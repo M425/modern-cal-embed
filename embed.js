@@ -164,6 +164,7 @@ function eventDetails(event) {
 		let where = document.createElement('span');
 		where.className = 'where';
 		let whereText = document.createTextNode(event.location);
+		console.log(event)
 		if (event.location.startsWith('http')) {
 			whereText = document.createElement('a');
 			whereText.href = event.location;
