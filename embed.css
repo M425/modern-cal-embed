@@ -256,7 +256,7 @@ nav #date {
 	border: 1px solid var(--border-color);
 	vertical-align: top;
 	overflow: hidden;
-	min-height: 90px
+	min-height: 4em
 }
 #month .labels td {
 	border: 0;
@@ -278,8 +278,8 @@ nav #date {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-	height: 1.7em;
-	width: 1.7em;
+	height: 1em;
+	width: 1em;
 	border-radius: 100px;
 }
 #month td .date.today span {
