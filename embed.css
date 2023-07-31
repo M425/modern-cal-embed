@@ -300,20 +300,20 @@ nav #date {
 	border-radius: 3px;
 }
 #month td.prevmonth {
-	background-color: #f9f0f0;
+	background-color: #5a548b;
 }
 #month td.nextmonth {
-	background-color: #f0f0f9;
+	background-color: #5a548b;
 }
 
 #month td.day-6, #month td.day-0 {
-	background: repeating-linear-gradient(-45deg, #e8e9ff, #e8e9ff 5px, #ffffff 5px, #ffffff 10px);
+	background: repeating-linear-gradient(-45deg, #807a7a, #807a7a 5px, #000000 5px, #000000 10px);
 }
 #month td.nextmonth.day-6, #month td.nextmonth.day-0 {
-	background: repeating-linear-gradient(-45deg, #e8e9ff, #e8e9ff 5px, #f0f0f9 5px, #f0f0f9 10px);
+	background: repeating-linear-gradient(-45deg, #807a7a, #807a7a 5px, #5a548b 5px, #5a548b 10px);
 }
 #month td.prevmonth.day-6, #month td.prevmonth.day-0 {
-	background: repeating-linear-gradient(-45deg, #e8e9ff, #e8e9ff 5px, #f9f0f0 5px, #f9f0f0 10px);
+	background: repeating-linear-gradient(-45deg, #807a7a, #807a7a 5px, #5a548b 5px, #5a548b 10px);
 }
 
 #month .past .event {
