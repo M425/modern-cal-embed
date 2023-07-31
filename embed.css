@@ -296,8 +296,8 @@ nav #date {
 	color: var(--theme-text-color);
 	margin: 2px 0;
 	box-sizing: border-box;
-	padding: 2px 4px;
-	border-radius: 3px;
+	padding: 2px 2px;
+	border-radius: 0px;
 }
 #month td.prevmonth {
 	background-color: #5a548b;
