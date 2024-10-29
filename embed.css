@@ -283,8 +283,10 @@ nav #date {
 	border-radius: 100px;
 }
 #month td .date.today span {
-	background-color: var(--theme-color);
-	color: var(--theme-text-color);
+	/* background-color: var(--theme-color); */
+	/* color: var(--theme-text-color); */
+	background-color: yellow;
+    color: black;
 }
 #month .event {
 	display: block;
